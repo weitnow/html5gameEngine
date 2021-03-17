@@ -5,6 +5,7 @@ import CanvasRenderer from "./renderer/CanvasRenderer.js";
 import Text from "./Text.js";
 import Sprite from "./Sprite.js";
 import Texture from "./Texture.js";
+import Game from "./Game.js";
 
 export default {
   Container,
@@ -14,4 +15,5 @@ export default {
   Text,
   Sprite,
   Texture,
+  Game,
 };

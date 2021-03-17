@@ -25,6 +25,9 @@ class Container {
       return child.dead ? false : true;
     });
   }
+  map(f) {
+    return this.children.map(f);
+  }
 }
 
 export default Container;
