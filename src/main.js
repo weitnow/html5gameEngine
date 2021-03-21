@@ -1,29 +1,25 @@
 "use strict";
-
-import KeyControls from "../pop/controls/KeyControls.js";
 import pop from "../pop/index.js";
+import Squizz from "./entities/Squizz.js";
+import Level from "./Level.js";
+const { Game, Texture, TileMap, math, KeyControls } = pop;
 
-const { Container, Text, Game, Sprite, Texture } = pop;
-
-const textures = {
-  background: new Texture("res/images/bg.png"),
-  spaceship: new Texture("res/images/spaceship.png"),
-  building: new Texture("res/images/building.png"),
-};
-
-// Game setup code
 const game = new Game(640, 320);
 const { scene, w, h } = game;
 
-// Make a spaceship
-const ship = scene.add(new Sprite(textures.spaceship));
-ship.scale = { x: 3, y: 0.5 };
-ship.rotation = Math.PI / 4;
-scene.add(ship);
+const controls = new KeyControls();
+const squizz = new Squizz(controls);
+const level = new Level(w, h);
 
-game.run((dt, t) => {
-  ship.pos.x += dt * 100;
-  if (ship.pos.x > w) {
-    ship.pos.x = -32;
-  }
+scene.add(level);
+scene.add(squizz);
+game.run(() => {
+  const { pos } = squizz;
+  const {
+    bounds: { top, bottom, left, right },
+  } = level;
+  // Confine player pos the bounds area
+  pos.x = math.clamp(pos.x, left, right);
+  pos.y = math.clamp(pos.y, top, bottom);
+  const ground = level.checkGround(squizz.pos);
 });
