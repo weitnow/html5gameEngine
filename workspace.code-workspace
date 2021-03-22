@@ -2,9 +2,12 @@
   "folders": [
     {
       "path": "."
+    },
+    {
+      "path": "../TestingGround"
     }
   ],
   "settings": {
-    "liveServer.settings.multiRootWorkspaceName": "NoveToNinja"
+    "liveServer.settings.multiRootWorkspaceName": "TestingGround"
   }
 }

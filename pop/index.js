@@ -8,7 +8,9 @@ import TileSprite from "./TileSprite.js";
 import Texture from "./Texture.js";
 import Game from "./Game.js";
 import math from "./utils/math.js";
+import entity from "./utils/entity.js";
 import TileMap from "./TileMap.js";
+import Camera from "./Camera.js";
 
 export default {
   Container,
@@ -21,5 +23,7 @@ export default {
   Texture,
   Game,
   TileMap,
+  Camera,
   math,
+  entity,
 };
