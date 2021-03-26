@@ -32,7 +32,7 @@ class TileMap extends Container {
     const { tileW, tileH } = this;
     return {
       x: mapPos.x * tileW,
-      Y: mapPos.y * tileH,
+      y: mapPos.y * tileH,
     };
   }
 

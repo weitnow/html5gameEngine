@@ -14,9 +14,11 @@ class Squizz extends TileSprite {
       [0, 1, 2, 3].map((x) => ({ x, y: 0 })),
       0.1
     );
-    anims.play("walk");
 
-    this.speed = 0.15;
+    this.minSpeed = 0.3;
+    this.reset();
+
+    this.speed = this.minSpeed;
     this.dir = {
       x: 1,
       y: 0,
@@ -24,11 +26,14 @@ class Squizz extends TileSprite {
     this.nextCell = this.speed;
   }
 
-  update(dt) {
-    super.update(dt);
+  reset() {
+    this.speed = this.minSpeed * 5;
+    this.anims.play("walk");
+  }
 
-    const { pos, controls, speed, dir } = this;
-    super.update(dt);
+  update(dt, t) {
+    super.update(dt, t);
+    const { pos, controls, minSpeed, speed, dir } = this;
 
     if ((this.nextCell -= dt) <= 0) {
       this.nextCell += speed;
@@ -42,6 +47,11 @@ class Squizz extends TileSprite {
         dir.y = y;
         pos.x = Math.round(pos.x / 32) * 32;
       }
+    }
+
+    // Speed adjustments
+    if (this.speed > minSpeed) {
+      this.speed -= dt;
     }
 
     pos.x += dir.x * dt * (32 / speed);

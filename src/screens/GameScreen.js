@@ -21,7 +21,6 @@ class GameScreen extends Container {
   constructor(game, controls, gameOver) {
     super();
     this.gameOver = gameOver;
-
     const level = new Level(game.w * 3, game.h * 2);
     const squizz = new Squizz(controls);
     squizz.pos = {
@@ -30,12 +29,7 @@ class GameScreen extends Container {
     };
 
     const camera = this.add(
-      new Camera(
-        squizz,
-        { w: game.w, h: game.h },
-        { w: level.w, h: level.h },
-        0.08
-      )
+      new Camera(squizz, { w: game.w, h: game.h }, { w: level.w, h: level.h })
     );
 
     // Add roaming baddies
@@ -43,7 +37,7 @@ class GameScreen extends Container {
 
     // Refueling power-ups
     this.pickups = new Container();
-    this.lastPickupAt = 1;
+    this.lastPickupAt = 0;
 
     // Add it all to the game camera
     camera.add(level);
@@ -145,6 +139,7 @@ class GameScreen extends Container {
     }
     this.updateLivesIcons();
   }
+
   addCloud(pos) {
     const { camera } = this;
     camera.add(new Cloud(pos));
@@ -159,7 +154,6 @@ class GameScreen extends Container {
       stats.maxPellets--;
       p.life *= 3; // death stays for a long time.
     }
-    console.log(level.getRandomPos());
     p.pos = level.getRandomPos();
   }
 

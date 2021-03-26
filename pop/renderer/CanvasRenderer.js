@@ -5,11 +5,16 @@ class CanvasRenderer {
     this.h = canvas.height = h;
     this.view = canvas;
     this.ctx = canvas.getContext("2d");
+    this.ctx.imageSmoothingEnabled = false;
     this.ctx.textBaseline = "top";
   }
 
   render(container, clear = true) {
+    if (container.visible == false) {
+      return;
+    }
     const { ctx } = this;
+
     function renderRec(container) {
       // Render the container children
       container.children.forEach((child) => {
@@ -17,20 +22,13 @@ class CanvasRenderer {
           return;
         }
         ctx.save();
-        // Draw the leaf node
 
+        // Handle transforms
         if (child.pos) {
           ctx.translate(Math.round(child.pos.x), Math.round(child.pos.y));
         }
-
-        if (child.anchor) {
-          ctx.translate(child.anchor.x, child.anchor.y);
-        }
-
-        if (child.scale) {
-          ctx.scale(child.scale.x, child.scale.y);
-        }
-
+        if (child.anchor) ctx.translate(child.anchor.x, child.anchor.y);
+        if (child.scale) ctx.scale(child.scale.x, child.scale.y);
         if (child.rotation) {
           const px = child.pivot ? child.pivot.x : 0;
           const py = child.pivot ? child.pivot.y : 0;
@@ -39,6 +37,7 @@ class CanvasRenderer {
           ctx.translate(-px, -py);
         }
 
+        // Draw the leaf nodes
         if (child.text) {
           const { font, fill, align } = child.style;
           if (font) ctx.font = font;
@@ -50,24 +49,21 @@ class CanvasRenderer {
           if (child.tileW) {
             ctx.drawImage(
               img,
-              child.frame.x * child.tileW, // source x
-              child.frame.y * child.tileH, // source y
-              // child.anims.frameSource.x * child.tileW, // source x
-              // child.anims.frameSource.y * child.tileH, // source y
-
+              child.frame.x * child.tileW,
+              child.frame.y * child.tileH,
               child.tileW,
-              child.tileH, // width & height
+              child.tileH,
               0,
               0,
               child.tileW,
-              child.tileH // destination with & height
+              child.tileH
             );
           } else {
-            ctx.drawImage(child.texture.img, 0, 0);
+            ctx.drawImage(img, 0, 0);
           }
         }
 
-        // Handle the child types
+        // Render any child sub-nodes
         if (child.children) {
           renderRec(child);
         }

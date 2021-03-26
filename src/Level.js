@@ -41,13 +41,37 @@ class Level extends TileMap {
       bottom: h - tileSize * 2,
     };
 
+    this.totalFreeSpots = totalFreeSpots;
     this.blank = { x: 0, y: 0 };
     this.lastTile = null;
-    this.totalFreeSpots = totalFreeSpots;
   }
+
+  getRandomPos() {
+    const { w, h, blank, bounds } = this;
+    let found = false;
+    let x, y;
+
+    while (!found) {
+      x = math.rand(w);
+      y = math.rand(h);
+      const isCleared = this.tileAtPixelPos({ x, y }).frame === blank;
+      const inBounds =
+        x > bounds.left &&
+        x < bounds.right &&
+        y > bounds.top &&
+        y < bounds.bottom;
+
+      if (inBounds && !isCleared) {
+        found = true;
+      }
+    }
+
+    return this.mapToPixelPos(this.pixelToMapPos({ x, y }));
+  }
+
   checkGround(pos) {
     const { blank, lastTile } = this;
-    const tile = (this.tile = this.tileAtPixelPos(pos));
+    const tile = this.tileAtPixelPos(pos);
     if (lastTile === tile) {
       return "checked";
     }
