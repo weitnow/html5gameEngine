@@ -1,27 +1,35 @@
-"use strict";
-
 import pop from "../pop/index.js";
-const { Game, KeyControls } = pop;
-import LogoScreen from "./screens/LogoScreen.js";
-import TitleScreen from "./screens/TitleScreen.js";
-import GameScreen from "./screens/GameScreen.js";
-import GameOverScreen from "./screens/GameOverScreen.js";
+const { Game, entity, KeyControls, math } = pop;
+import Mouse from "./entities/Mouse.js";
+import Cheese from "./entities/Cheese.js";
+import Container from "../pop/Container.js";
 
-const game = new Game(640, 480);
-const controls = new KeyControls();
+const game = new Game(640, 320);
+const { scene, w, h } = game;
 
-function titleScreen() {
-  game.scene = new TitleScreen(game, controls, newGame);
+const relocate = (e) => {
+  const { pos } = e;
+  pos.x = math.rand(w - 50);
+  pos.y = math.rand(h - 50);
+};
+
+const mouse = scene.add(new Mouse(new KeyControls()));
+relocate(mouse);
+entity.addDebug(mouse);
+
+const cheeses = new Container();
+
+for (let i = 0; i < 5; i++) {
+  const cheese = new Cheese();
+  relocate(cheese);
+  entity.addDebug(cheese);
+  cheeses.add(cheese);
 }
 
-function gameOverScreen(result) {
-  game.scene = new GameOverScreen(game, controls, result, titleScreen);
-}
+scene.add(cheeses);
 
-function newGame() {
-  game.scene = new GameScreen(game, controls, gameOverScreen);
-}
-
-game.scene = new LogoScreen(game, titleScreen);
-
-game.run();
+game.run(() => {
+  entity.hits(mouse, cheeses, (cheese) => {
+    relocate(cheese);
+  });
+});

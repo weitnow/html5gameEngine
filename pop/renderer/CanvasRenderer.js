@@ -61,6 +61,9 @@ class CanvasRenderer {
           } else {
             ctx.drawImage(img, 0, 0);
           }
+        } else if (child.style && child.w && child.h) {
+          ctx.fillStyle = child.style.fill;
+          ctx.fillRect(0, 0, child.w, child.h);
         }
 
         // Render any child sub-nodes
