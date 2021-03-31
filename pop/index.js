@@ -9,6 +9,7 @@ import Texture from "./Texture.js";
 import Game from "./Game.js";
 import math from "./utils/math.js";
 import entity from "./utils/entity.js";
+import deadInTracks from "./movement/deadInTracks.js";
 import TileMap from "./TileMap.js";
 import Camera from "./Camera.js";
 import Rect from "./Rect.js";
@@ -28,4 +29,5 @@ export default {
   Rect,
   math,
   entity,
+  deadInTracks,
 };
