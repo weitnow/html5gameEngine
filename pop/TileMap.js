@@ -3,6 +3,11 @@ import TileSprite from "./TileSprite";
 
 class TileMap extends Container {
   constructor(tiles, mapW, mapH, tileW, tileH, texture) {
+    // tiles is an array of an object with optional meta-data
+    //(like name or walkable = true) and at least x: y: data with the position on the sprite
+
+    // texture is the png-file
+
     super();
     this.mapW = mapW;
     this.mapH = mapH;
