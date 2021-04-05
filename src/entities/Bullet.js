@@ -17,6 +17,7 @@ class Bullet extends TileSprite {
     this.speed = speed;
     this.dir = dir;
     this.life = 3;
+    this.rotation = math.angle(dir, { x: 0, y: 0 });
   }
 
   update(dt, t) {

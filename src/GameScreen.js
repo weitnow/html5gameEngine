@@ -4,6 +4,7 @@ import Level from "./Level.js";
 import Player from "./entities/Player.js";
 import Pickup from "./entities/Pickup.js";
 import Bat from "./entities/Bat.js";
+import Totem from "./entities/Totem.js";
 
 class GameScreen extends Container {
   constructor(game, controls) {
@@ -18,11 +19,18 @@ class GameScreen extends Container {
     this.pickups = this.add(new Container());
     this.player = this.add(player);
 
-    const bats = this.add(new Container());
-    for (let i = 0; i < 5; i++) {
-      this.randoBat(bats.add(new Bat(() => map.findFreeSpot())));
+    const baddies = new Container();
+    for (let i = 0; i < 3; i++) {
+      this.randoBat(baddies.add(new Bat(() => map.findFreeSpot())));
     }
-    this.bats = bats;
+    this.baddies = this.add(baddies);
+
+    // kec code
+    const totem = new Totem(player, (bullet) => baddies.add(bullet));
+    totem.pos = { x: 50, y: 50 };
+    this.add(totem);
+
+    // end of kec code
 
     this.populate();
   }
@@ -44,9 +52,9 @@ class GameScreen extends Container {
 
   update(dt, t) {
     super.update(dt, t);
-    const { bats, player, pickups } = this;
+    const { baddies, player, pickups } = this;
 
-    bats.map((bat) => {
+    baddies.map((bat) => {
       if (entity.hit(player, bat)) {
         player.gameOver = true;
       }
