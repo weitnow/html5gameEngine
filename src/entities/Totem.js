@@ -1,6 +1,6 @@
 import pop from "../../pop/index.js";
+const { entity, Texture, TileSprite, math } = pop;
 import Bullet from "./Bullet.js";
-const { Texture, TileSprite, math, entity } = pop;
 
 const texture = new Texture("res/images/bravedigger-tiles.png");
 
@@ -8,7 +8,7 @@ class Totem extends TileSprite {
   constructor(target, onFire) {
     super(texture, 48, 48);
     this.type = "Totem";
-    this.frame.x = 0;
+    this.frame.x = 2;
     this.frame.y = 1;
     this.target = target;
     this.onFire = onFire;
@@ -25,7 +25,7 @@ class Totem extends TileSprite {
     const y = Math.sin(angle);
 
     const bullet = new Bullet({ x, y }, 300);
-    bullet.pos.x = totemPos.x;
+    bullet.pos.x = totemPos.x - bullet.w / 2;
     bullet.pos.y = totemPos.y - bullet.h / 2;
 
     onFire(bullet);
@@ -35,11 +35,10 @@ class Totem extends TileSprite {
     if (math.randOneIn(250)) {
       this.fireIn = 1;
     }
-
     if (this.fireIn > 0) {
       this.fireIn -= dt;
-      // Telegraph to the player that Totem is about to fire
-      this.frame.x = [1, 0][Math.floor(t / 0.1) % 2];
+      // Telegraph to the player
+      this.frame.x = [1, 0][((t / 0.1) | 0) % 2];
       if (this.fireIn < 0) {
         this.fireAtTarget();
       }

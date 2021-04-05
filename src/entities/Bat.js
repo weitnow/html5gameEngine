@@ -3,6 +3,12 @@ const { Texture, TileSprite, math } = pop;
 
 const texture = new Texture("res/images/bravedigger-tiles.png");
 
+const states = {
+  ATTACK: 0,
+  EVADE: 1,
+  WANDER: 2,
+};
+
 class Bat extends TileSprite {
   constructor(findWaypoint) {
     super(texture, 48, 48);
@@ -18,6 +24,8 @@ class Bat extends TileSprite {
     this.speed = math.rand(100, 120);
     this.findWaypoint = findWaypoint;
     this.waypoint = findWaypoint();
+
+    this.state = states.ATTACK;
   }
 
   update(dt, t) {
@@ -25,7 +33,6 @@ class Bat extends TileSprite {
     //Move in the directon of the path
     const xo = waypoint.x - pos.x;
     const yo = waypoint.y - pos.y;
-    //console.log(`xo: %s xy: %s`, xo, yo);
     const step = speed * dt;
     const xIsClose = Math.abs(xo) <= step;
     const yIsClose = Math.abs(yo) <= step;
