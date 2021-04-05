@@ -1,5 +1,5 @@
 import pop from "../pop/index.js";
-const { Container, entity } = pop;
+const { Container, entity, math } = pop;
 import Level from "./Level.js";
 import Player from "./entities/Player.js";
 import Pickup from "./entities/Pickup.js";
@@ -12,21 +12,21 @@ class GameScreen extends Container {
     this.h = game.h;
     const map = new Level(game.w, game.h);
     const player = new Player(controls, map);
-    player.pos.x = 48;
-    player.pos.y = 48;
+    player.pos = map.findFreeSpot();
 
     this.map = this.add(map);
-    this.player = this.add(player);
     this.pickups = this.add(new Container());
-    this.populate();
+    this.player = this.add(player);
 
     const bats = this.add(new Container());
-    for (let i = 0; i < 1; i++) {
-      bats.add(new Bat(() => map.findFreeSpot()));
+    for (let i = 0; i < 5; i++) {
+      this.randoBat(bats.add(new Bat(() => map.findFreeSpot())));
     }
+    this.bats = bats;
 
-    //entity.addDebug(this.player);
+    this.populate();
   }
+
   populate() {
     const { pickups, map } = this;
     for (let i = 0; i < 5; i++) {
@@ -35,9 +35,26 @@ class GameScreen extends Container {
     }
   }
 
+  randoBat(bat) {
+    bat.pos.x = this.w * math.randf(1, 2);
+    bat.pos.y = math.rand(10) * 32;
+    bat.speed = math.rand(150, 230);
+    return bat;
+  }
+
   update(dt, t) {
     super.update(dt, t);
-    const { player, pickups } = this;
+    const { bats, player, pickups } = this;
+
+    bats.map((bat) => {
+      if (entity.hit(player, bat)) {
+        player.gameOver = true;
+      }
+      if (bat.pos.x < -32) {
+        this.randoBat(bat);
+      }
+    });
+
     // Collect pickup!
     entity.hits(player, pickups, (p) => {
       p.dead = true;

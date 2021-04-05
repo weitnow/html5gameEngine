@@ -1,11 +1,12 @@
 import pop from "../../pop/index.js";
-const { Texture, TileSprite, math, entity } = pop;
+const { Texture, TileSprite, math } = pop;
 
 const texture = new Texture("res/images/bravedigger-tiles.png");
 
 class Bat extends TileSprite {
   constructor(findWaypoint) {
     super(texture, 48, 48);
+
     this.hitBox = {
       x: 6,
       y: 6,
@@ -14,7 +15,7 @@ class Bat extends TileSprite {
     };
     this.frame.x = 3;
     this.frame.y = 1;
-    this.speed = math.rand(50, 100);
+    this.speed = math.rand(100, 120);
     this.findWaypoint = findWaypoint;
     this.waypoint = findWaypoint();
   }
@@ -41,6 +42,8 @@ class Bat extends TileSprite {
       // New way point
       this.waypoint = this.findWaypoint();
     }
+
+    this.frame.x = (((t / 0.25) | 0) % 2) + 3;
   }
 }
 

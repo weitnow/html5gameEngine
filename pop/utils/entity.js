@@ -61,6 +61,10 @@ function distance(a, b) {
   return math.distance(center(a), center(b));
 }
 
+function angle(a, b) {
+  return math.angle(center(a), center(b));
+}
+
 export default {
   center,
   distance,
@@ -68,4 +72,5 @@ export default {
   bounds,
   hit,
   hits,
+  angle,
 };

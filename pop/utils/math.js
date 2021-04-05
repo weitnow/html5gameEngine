@@ -26,6 +26,14 @@ function distance(a, b) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
+function angle(a, b) {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  const angle = Math.atan2(dy, dx);
+
+  return angle;
+}
+
 /**
  * Clamps x between min and max value
  * @param  {Number} x     x as a number
@@ -44,4 +52,5 @@ export default {
   randOneFrom,
   distance,
   clamp,
+  angle,
 };

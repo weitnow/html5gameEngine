@@ -8,15 +8,25 @@ class Player extends TileSprite {
     super(texture, 48, 48); // 48, 48 = with and height of the player
     this.controls = controls;
     this.map = map;
+    this.hitBox = {
+      x: 8,
+      y: 10,
+      w: 28,
+      h: 38,
+    };
     this.speed = 210;
     this.anchor = { x: 0, y: 0 };
-
-    //kec modification
-    this.hitBox = { x: 9, y: 18, w: 30, h: 28 };
   }
 
   update(dt, t) {
-    const { pos, controls, map, speed } = this;
+    const { pos, controls, gameOver, map, speed } = this;
+
+    if (gameOver) {
+      this.rotation += dt * 5;
+      this.pivot.y = 16;
+      this.pivot.x = 16;
+      return;
+    }
 
     let { x, y } = controls;
     const xo = x * dt * speed;

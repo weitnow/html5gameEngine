@@ -1,3 +1,5 @@
+"use strict";
+
 import pop from "../pop/index.js";
 import entity from "../pop/utils/entity.js";
 const { Game, KeyControls } = pop;
