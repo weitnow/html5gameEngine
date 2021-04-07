@@ -14,6 +14,8 @@ class Bullet extends TileSprite {
     };
     this.frame.x = 4;
     this.frame.y = 2;
+    this.pivot.x = 24;
+    this.pivot.y = 24;
     this.speed = speed;
     this.dir = dir;
     this.life = 3;
