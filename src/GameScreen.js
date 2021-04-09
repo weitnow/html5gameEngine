@@ -23,12 +23,12 @@ class GameScreen extends Container {
 
     const baddies = new Container();
     for (let i = 0; i < 3; i++) {
-      this.randoBat(baddies.add(new Bat(() => map.findFreeSpot(false))));
+      this.randoBat(baddies.add(new Bat(player)));
     }
     this.baddies = this.add(baddies);
 
     // Add a couple of Top-Hat Totems
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 0; i++) {
       const t = this.add(new Totem(player, (b) => baddies.add(b)));
       const { x, y } = map.findFreeSpot(false); // `false` means "NOT free"
       t.pos.x = x;

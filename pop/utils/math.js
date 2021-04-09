@@ -16,6 +16,18 @@ function randOneIn(max = 2) {
   return rand(0, max) === 0;
 }
 
+function calcXYfromAngle(angle) {
+  return {
+    x: Math.cos(angle),
+    y: Math.sin(angle),
+  };
+}
+
+function calcXYfromObjtoObj(targetObj, originObj) {
+  const angle = this.angle(targetObj, originObj);
+  return calcXYfromAngle(angle);
+}
+
 function randOneFrom(items) {
   return items[rand(items.length)];
 }
@@ -53,4 +65,6 @@ export default {
   distance,
   clamp,
   angle,
+  calcXYfromAngle,
+  calcXYfromObjtoObj,
 };

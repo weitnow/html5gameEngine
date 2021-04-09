@@ -1,5 +1,5 @@
 import pop from "../../pop/index.js";
-const { Texture, TileSprite, math } = pop;
+const { entity, Texture, TileSprite, math } = pop;
 
 const texture = new Texture("res/images/bravedigger-tiles.png");
 
@@ -10,9 +10,8 @@ const states = {
 };
 
 class Bat extends TileSprite {
-  constructor(findWaypoint) {
+  constructor(target) {
     super(texture, 48, 48);
-
     this.hitBox = {
       x: 6,
       y: 6,
@@ -21,36 +20,57 @@ class Bat extends TileSprite {
     };
     this.frame.x = 3;
     this.frame.y = 1;
-    this.speed = math.rand(100, 120);
-    this.findWaypoint = findWaypoint;
-    this.waypoint = findWaypoint();
+    this.speed = math.rand(180, 300);
+    this.target = target;
+    this.waypoint = null;
 
     this.state = states.ATTACK;
   }
 
   update(dt, t) {
-    const { pos, dir, speed, waypoint } = this;
-    //Move in the directon of the path
-    const xo = waypoint.x - pos.x;
-    const yo = waypoint.y - pos.y;
-    const step = speed * dt;
-    const xIsClose = Math.abs(xo) <= step;
-    const yIsClose = Math.abs(yo) <= step;
+    const { pos, speed, target, waypoint, state } = this;
 
-    if (!xIsClose) {
-      pos.x += speed * (xo > 0 ? 1 : -1) * dt;
+    const angle = entity.angle(target, this);
+    const distance = entity.distance(target, this);
+    let xo = 0;
+    let yo = 0;
+    let waypointAngle;
+    let waypointDistance;
+
+    if (state === states.ATTACK) {
+      xo = Math.cos(angle) * speed * dt;
+      yo = Math.sin(angle) * speed * dt;
+      if (distance < 60) {
+        this.state = states.EVADE;
+      }
+    } else if (state === states.EVADE) {
+      xo = -Math.cos(angle) * speed * dt;
+      yo = -Math.sin(angle) * speed * dt;
+      if (distance > 120) {
+        if (math.randOneIn(2)) {
+          this.state = states.WANDER;
+          this.waypoint = {
+            x: pos.x + math.rand(-200, 200),
+            y: pos.y + math.rand(-200, 200),
+          };
+        } else {
+          this.state = states.ATTACK;
+        }
+      }
+    } else if (state === states.WANDER) {
+      waypointAngle = math.angle(waypoint, pos);
+      waypointDistance = math.distance(pos, waypoint);
+
+      xo = Math.cos(waypointAngle) * speed * dt;
+      yo = Math.sin(waypointAngle) * speed * dt;
+      if (waypointDistance < 60) {
+        this.state = states.EVADE;
+      }
     }
+    pos.x += xo;
+    pos.y += yo;
 
-    if (!yIsClose) {
-      pos.y += speed * (yo > 0 ? 1 : -1) * dt;
-    }
-
-    if (xIsClose && yIsClose) {
-      // New way point
-      this.waypoint = this.findWaypoint();
-    }
-
-    this.frame.x = (((t / 0.25) | 0) % 2) + 3;
+    this.frame.x = (((t / 0.1) | 0) % 2) + 3;
   }
 }
 
