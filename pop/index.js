@@ -14,6 +14,7 @@ import wallslide from "./movement/wallslide.js";
 import TileMap from "./TileMap.js";
 import Camera from "./Camera.js";
 import Rect from "./Rect.js";
+import State from "./State.js";
 
 export default {
   Container,
@@ -28,6 +29,7 @@ export default {
   TileMap,
   Camera,
   Rect,
+  State,
   math,
   entity,
   deadInTracks,
