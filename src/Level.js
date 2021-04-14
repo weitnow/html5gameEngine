@@ -1,6 +1,10 @@
 import pop from "../pop/index.js";
 const { TileMap, Texture, math } = pop;
 
+import EasyStar from "easystarjs";
+//Create a pathfinding object
+const path = new EasyStar.js();
+
 const texture = new Texture("res/images/bravedigger-tiles.png");
 
 class Level extends TileMap {
@@ -16,7 +20,10 @@ class Level extends TileMap {
     ];
 
     const getTile = (id) => tileIndexes.find((t) => t.id == id);
+    // find gibt den wert eines arrays zurück welches als erstes die bedingung erfüllt
+
     const getIdx = (id) => tileIndexes.indexOf(getTile(id));
+    // indexOf gibt den Index zurück, an dem ein bestimmtes Element im Array zu erstenmal auftritt,
 
     // Make a random dungeon
     const level = Array(mapW * mapH).fill(0);
@@ -67,6 +74,21 @@ class Level extends TileMap {
       tileSize,
       texture
     );
+
+    // Translate the one-dimensional level into path-finder 2d array
+    const grid = [];
+    for (let i = 0; i < level.length; i += mapW) {
+      grid.push(level.slice(i, i + mapW));
+    }
+    path.setGrid(grid); // if the level changes, recalculate grid with setgrid again
+
+    // generate array which contains only the indexes of tileIndexes which are walkable
+    const walkables = tileIndexes
+      .map(({ walkable }, i) => (walkable ? i : -1))
+      .filter((i) => i !== -1);
+
+    path.setAcceptableTiles(walkables);
+    this.path = path;
   }
 
   findFreeSpot(isFree = true) {

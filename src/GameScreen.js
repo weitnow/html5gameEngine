@@ -5,6 +5,7 @@ import Player from "./entities/Player.js";
 import Pickup from "./entities/Pickup.js";
 import Bat from "./entities/Bat.js";
 import Totem from "./entities/Totem.js";
+import Ghost from "./entities/Ghost.js";
 import State from "../pop/State.js";
 
 class GameScreen extends Container {
@@ -27,7 +28,7 @@ class GameScreen extends Container {
     const baddies = new Container(); // Container for enemies and Bullets
 
     // Add a couple of Bats
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 0; i++) {
       this.randoBat(baddies.add(new Bat(player)));
     }
     this.baddies = this.add(baddies);
@@ -39,6 +40,9 @@ class GameScreen extends Container {
       t.pos.x = x;
       t.pos.y = y;
     }
+
+    // Add a ghost
+    const ghost = this.add(new Ghost(player, map));
 
     this.populate();
     this.score = 0;
