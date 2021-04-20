@@ -19,7 +19,7 @@ class Ghost extends TileSprite {
     this.target = target;
     this.waypoint = null;
     this.map = map;
-    this.pos = map.findFreeSpot();
+    //this.pos = map.findFreeSpot();
     this.path = this.findPath();
   }
   update(dt, t) {

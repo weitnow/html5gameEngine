@@ -1,5 +1,5 @@
 import pop from "../pop/index.js";
-const { Container, entity, math, Text } = pop;
+const { Container, entity, math, Text, Camera } = pop;
 import Level from "./Level.js";
 import Player from "./entities/Player.js";
 import Pickup from "./entities/Pickup.js";
@@ -25,24 +25,30 @@ class GameScreen extends Container {
     this.pickups = this.add(new Container());
     this.player = this.add(player);
 
+    this.cam = new Camera(player, { x: 100, y: 100 });
+
     const baddies = new Container(); // Container for enemies and Bullets
 
     // Add a couple of Bats
-    for (let i = 0; i < 0; i++) {
+    for (let i = 0; i < 3; i++) {
       this.randoBat(baddies.add(new Bat(player)));
     }
     this.baddies = this.add(baddies);
 
     // Add a couple of Top-Hat Totems
-    for (let i = 0; i < 0; i++) {
+    for (let i = 0; i < 2; i++) {
       const t = this.add(new Totem(player, (b) => baddies.add(b)));
       const { x, y } = map.findFreeSpot(false); // `false` means "NOT free"
       t.pos.x = x;
       t.pos.y = y;
     }
 
-    // Add a ghost
-    const ghost = this.add(new Ghost(player, map));
+    // Add a couple of Ghosts
+    for (let i = 0; i < 1; i++) {
+      const ghost = this.baddies.add(new Ghost(player, map));
+      ghost.pos = map.findFreeSpot();
+      ghost.findPath();
+    }
 
     this.populate();
     this.score = 0;
@@ -97,7 +103,7 @@ class GameScreen extends Container {
           player.gameOver = true;
           this.scoreText.text = "DEAD. Score: " + this.score;
         }
-        super.update(dt, t);
+        super.update(dt / 3, t); // dt / 3 = play game 3 times slower in the background
 
         // If player dead, wait for space bar
         if (player.gameOver && controls.action) {
